@@ -79,3 +79,8 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 RUN docker-php-ext-install pdo_mysql
 
 ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
+
+ADD assets/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm"]
