@@ -75,8 +75,11 @@ RUN runtimeRequirements="libmagickwand-6.q16-dev --no-install-recommends" \
 # opcache
 RUN docker-php-ext-install opcache
 
+# Activate login for user www-data
+RUN chsh www-data -s /bin/bash
 
 ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
+ADD assets/Settings.yaml.docker /opt/docker/Settings.yaml.docker
 ADD assets/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
