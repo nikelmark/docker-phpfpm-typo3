@@ -67,10 +67,6 @@ RUN apt-get update && apt-get install -y libmagickwand-6.q16-dev --no-install-re
 
 RUN docker-php-ext-install opcache
 
-RUN echo "date.timezone=Europe/Zurich" >> /usr/local/etc/php/php.ini \
-    && echo "short_open_tag=Off" >> /usr/local/etc/php/php.ini
-
-
 RUN curl -sSL https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && apt-get update \
@@ -81,3 +77,5 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 
 
 RUN docker-php-ext-install pdo_mysql
+
+ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
