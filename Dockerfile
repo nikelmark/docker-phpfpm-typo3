@@ -1,6 +1,16 @@
 FROM php:5.6-fpm
 MAINTAINER Jonas Renggli <jonas.renggli@swisscom.com>
 
+# Install general utilities
+RUN apt-get update \
+	&& apt-get install -y \
+		vim \
+		net-tools \
+		procps \
+		telnet \
+	&& rm -r /var/lib/apt/lists/*
+
+# Install utilities used by TYPO3 CMS / Flow / Neos
 RUN apt-get update \
 	&& apt-get install -y \
 		graphicsmagick \
@@ -12,74 +22,61 @@ RUN apt-get update \
 		mysql-client \
 		moreutils \
 		dnsutils \
-	&& rm -rf /var/lib/apt/lists/* 
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update
-
-#RUN docker-php-ext-install json
-
-
-RUN apt-get update \
-	&& apt-get install -y libpng12-dev libjpeg-dev \
+# gd
+RUN buildRequirements="libpng12-dev libjpeg-dev" \
+	&& apt-get update && apt-get install -y ${buildRequirements} \
 	&& docker-php-ext-configure gd --with-jpeg-dir=/usr/lib \
-	&& docker-php-ext-install gd
+	&& docker-php-ext-install gd \
+	&& apt-get purge -y ${buildRequirements} \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install mysqli
-
-RUN apt-get -y install re2c libmcrypt-dev \
-	&& docker-php-ext-install mcrypt
-
-#RUN apt-get -y install zlib1g-dev \
-#	&& docker-php-ext-install zip
-
-RUN docker-php-ext-install mbstring
-
-
-RUN buildRequirements="libicu-dev g++" \
-    && apt-get update && apt-get install -y ${buildRequirements} \
-    && docker-php-ext-install intl \
-    && apt-get purge -y ${buildRequirements} \
-    && runtimeRequirements="libicu52" \
-    && apt-get install -y --auto-remove ${runtimeRequirements} 
-
-#RUN apt-get install -y libcurl4-openssl-dev
-#RUN docker-php-ext-install curl
-
-#RUN apt-get install -y zlib1g-dev \
-#    && docker-php-ext-install zip \
-#    && apt-get purge -y --auto-remove zlib1g-dev
-
-#RUN apt-get update && apt-get install -y \
-#        libfreetype6-dev \
-#        libjpeg62-turbo-dev \
-#        libmcrypt-dev \
-#        libpng12-dev \
-#    && docker-php-ext-install iconv mcrypt
-
-RUN apt-get install -y libyaml-dev
-RUN pecl install yaml
-RUN echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
-
-RUN apt-get update && apt-get install -y libmagickwand-6.q16-dev --no-install-recommends \
-&& ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin \
-&& pecl install imagick \
-&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini
-
-RUN docker-php-ext-install opcache
-
-RUN curl -sSL https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && apt-get update \
-#    && apt-get install -y zlib1g-dev git \
-#    && docker-php-ext-install zip \
-#    && apt-get purge -y --auto-remove zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-
+# pdo_mysql
 RUN docker-php-ext-install pdo_mysql
 
-ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
+# mysqli
+RUN docker-php-ext-install mysqli
 
+# mcrypt
+RUN runtimeRequirements="re2c libmcrypt-dev" \
+	&& apt-get update && apt-get install -y ${runtimeRequirements} \
+	&& docker-php-ext-install mcrypt \
+	&& rm -rf /var/lib/apt/lists/*
+
+# mbstring
+RUN docker-php-ext-install mbstring
+
+# intl
+RUN buildRequirements="libicu-dev g++" \
+	&& apt-get update && apt-get install -y ${buildRequirements} \
+	&& docker-php-ext-install intl \
+	&& apt-get purge -y ${buildRequirements} \
+	&& runtimeRequirements="libicu52" \
+	&& apt-get install -y --auto-remove ${runtimeRequirements} \
+	&& rm -rf /var/lib/apt/lists/*
+
+# yaml
+RUN buildRequirements="libyaml-dev" \
+	&& apt-get update && apt-get install -y ${buildRequirements} \
+	&& pecl install yaml \
+	&& echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini \
+	&& apt-get purge -y ${buildRequirements} \
+	&& rm -rf /var/lib/apt/lists/*
+
+# imagick
+RUN runtimeRequirements="libmagickwand-6.q16-dev --no-install-recommends" \
+	&& apt-get update && apt-get install -y ${runtimeRequirements} \
+	&& ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ \
+	&& pecl install imagick \
+	&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini \
+	&& rm -rf /var/lib/apt/lists/*
+
+# opcache
+RUN docker-php-ext-install opcache
+
+
+ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
 ADD assets/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
