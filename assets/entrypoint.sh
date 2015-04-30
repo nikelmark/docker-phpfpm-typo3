@@ -28,6 +28,9 @@ su www-data export -c "FLOW_CONTEXT=Production ${DOCUMENT_ROOT}flow flow:cache:f
 su www-data export -c "FLOW_CONTEXT=Production ${DOCUMENT_ROOT}flow doctrine:migrate --force"
 su www-data export -c "FLOW_CONTEXT=Production ${DOCUMENT_ROOT}flow cache:warmup --force"
 
+su www-data export -c "FLOW_CONTEXT=Production ${DOCUMENT_ROOT}flow nodeindex:cleanup --force"
+su www-data export -c "FLOW_CONTEXT=Production ${DOCUMENT_ROOT}flow nodeindex:build --force" &
+
 
 #############################
 ## COMMAND

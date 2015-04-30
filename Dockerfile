@@ -75,6 +75,13 @@ RUN runtimeRequirements="libmagickwand-6.q16-dev --no-install-recommends" \
 # opcache
 RUN docker-php-ext-install opcache
 
+# locales
+ADD assets/locale.gen /etc/locale.gen
+RUN apt-get update \
+	&& apt-get install -y locales \
+	&& rm -r /var/lib/apt/lists/* \
+	&& locale-gen
+
 # Activate login for user www-data
 RUN chsh www-data -s /bin/bash
 
