@@ -14,10 +14,7 @@ TYPO3:
 Flowpack:
   ElasticSearch:
     clients:
-      default: ~
-      myElasticSearch:
+      default:
         -
           host: '<ELASTICSEARCH_HOST>'
           port: <ELASTICSEARCH_PORT>
-    realtimeIndexing:
-      client: myElasticSearch
