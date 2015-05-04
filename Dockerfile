@@ -89,5 +89,7 @@ ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
 ADD assets/Settings.yaml.docker /opt/docker/Settings.yaml.docker
 ADD assets/entrypoint.sh /entrypoint.sh
 
+WORKDIR /data/web/releases/current
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
