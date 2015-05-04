@@ -89,6 +89,11 @@ ADD assets/php.ini /usr/local/etc/php/conf.d/php.ini
 ADD assets/Settings.yaml.docker /opt/docker/Settings.yaml.docker
 ADD assets/entrypoint.sh /entrypoint.sh
 
+RUN apt-get update \
+	&& apt-get install -y ssmtp \
+	&& rm -r /var/lib/apt/lists/*
+ADD assets/ssmtp.conf /opt/docker/ssmtp.conf
+
 WORKDIR /data/web/releases/current
 
 ENTRYPOINT ["/entrypoint.sh"]

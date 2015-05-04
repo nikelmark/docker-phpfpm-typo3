@@ -11,6 +11,10 @@ TYPO3:
   Imagine:
     driver: 'Imagick'
 
+  SwiftMailer:
+    transport:
+      type: 'Swift_MailTransport'
+
 Flowpack:
   ElasticSearch:
     clients:

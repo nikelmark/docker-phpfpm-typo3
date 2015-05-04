@@ -1,5 +1,12 @@
 #!/bin/bash
 
+SSMTP_SETTINGS_PATH=/etc/ssmtp/ssmtp.conf
+cp /opt/docker/ssmtp.conf ${SSMTP_SETTINGS_PATH}
+/bin/sed -i "s#<SSMTP_ROOT>#${SSMTP_ROOT}#" ${SSMTP_SETTINGS_PATH}
+/bin/sed -i "s@<SSMTP_MAILHUB>@${SSMTP_MAILHUB}@" ${SSMTP_SETTINGS_PATH}
+/bin/sed -i "s@<SSMTP_HOSTNAME>@${SSMTP_HOSTNAME}@" ${SSMTP_SETTINGS_PATH}
+
+
 DOCUMENT_ROOT=/data/web/releases/current/
 SETTINGS_PATH=${DOCUMENT_ROOT}Configuration/Production/Settings.yaml
 
