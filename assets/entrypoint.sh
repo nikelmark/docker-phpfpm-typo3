@@ -13,7 +13,12 @@ SETTINGS_PATH=${DOCUMENT_ROOT}Configuration/Production/Settings.yaml
 chown -R www-data:www-data ${DOCUMENT_ROOT}Configuration/ ${DOCUMENT_ROOT}Data/ ${DOCUMENT_ROOT}Web/
 chmod -R u+rwx,g+rwx ${DOCUMENT_ROOT}Configuration/ ${DOCUMENT_ROOT}Data/ ${DOCUMENT_ROOT}Web/
 
-cp /opt/docker/Settings.yaml.docker ${SETTINGS_PATH}
+if [ -f ${SETTINGS_PATH}.docker ];
+then
+	cp ${SETTINGS_PATH}.docker ${SETTINGS_PATH}
+else
+	cp /opt/docker/Settings.yaml.docker ${SETTINGS_PATH}
+fi
 
 /bin/sed -i "s@<DB_HOST>@${DB_PORT_3306_TCP_ADDR}@" ${SETTINGS_PATH}
 /bin/sed -i "s@<DB_PORT>@${DB_PORT_3306_TCP_PORT}@" ${SETTINGS_PATH}
