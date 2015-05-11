@@ -13,6 +13,7 @@ RUN apt-get update \
 # Install utilities used by TYPO3 CMS / Flow / Neos
 RUN apt-get update \
 	&& apt-get install -y \
+		imagemagick \
 		graphicsmagick \
 		zip \
 		unzip \
