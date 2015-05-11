@@ -1,4 +1,4 @@
-FROM php:5.6-fpm
+FROM php:5.4-fpm
 MAINTAINER Jonas Renggli <jonas.renggli@swisscom.com>
 
 # Install general utilities
@@ -74,7 +74,16 @@ RUN runtimeRequirements="libmagickwand-6.q16-dev --no-install-recommends" \
 	&& rm -rf /var/lib/apt/lists/*
 
 # opcache
-RUN docker-php-ext-install opcache
+RUN git clone https://github.com/zendtech/ZendOptimizerPlus /tmp/ZendOptimizerPlus \
+	&& cd /tmp/ZendOptimizerPlus \
+	&& /usr/local/bin/phpize \
+	&& ./configure \
+		--with-php-config=/usr/local/bin/php-config \
+	&& make \
+	&& make install \
+	&& echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20100525/opcache.so" > /usr/local/etc/php/conf.d/ext-opcache.ini \
+	&& cd / \
+	&& rm -rf /tmp/ZendOptimizerPlus
 
 # locales
 ADD assets/locale.gen /etc/locale.gen
