@@ -10,6 +10,7 @@ cp /opt/docker/ssmtp.conf ${SSMTP_SETTINGS_PATH}
 DOCUMENT_ROOT=/data/web/releases/current/
 SETTINGS_PATH=${DOCUMENT_ROOT}Configuration/Production/Settings.yaml
 
+mkdir -p ${DOCUMENT_ROOT}Configuration/ ${DOCUMENT_ROOT}Data/ ${DOCUMENT_ROOT}Web/
 chown -R www-data:www-data ${DOCUMENT_ROOT}Configuration/ ${DOCUMENT_ROOT}Data/ ${DOCUMENT_ROOT}Web/
 chmod -R u+rwx,g+rwx ${DOCUMENT_ROOT}Configuration/ ${DOCUMENT_ROOT}Data/ ${DOCUMENT_ROOT}Web/
 
