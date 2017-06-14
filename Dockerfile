@@ -86,7 +86,7 @@ RUN git clone https://github.com/zendtech/ZendOptimizerPlus /tmp/ZendOptimizerPl
 	&& rm -rf /tmp/ZendOptimizerPlus
 
 # create symlink to support standard /usr/bin/php
-ln -s /usr/local/bin/php /usr/bin/php
+RUN ln -s /usr/local/bin/php /usr/bin/php
 
 # locales
 ADD assets/locale.gen /etc/locale.gen
